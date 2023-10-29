@@ -1,6 +1,5 @@
-
-
 #include <stdio.h>
+
 int main(int argc, char *argv[])
 {
   int array_length = 4;
