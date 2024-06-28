@@ -44,7 +44,7 @@ pub fn build(b: *std.Build) !void {
     // Ideally we would want to issue more than one read
     // otherwise there is no point in buffering.
     var msg_buf: [4096]u8 = undefined;
-    var input = try r.readUntilDelimiterOrEof(&msg_buf, '\n');
+    const input = try r.readUntilDelimiterOrEof(&msg_buf, '\n');
 
     if (input) |input_txt| {
         const parsed_num = try std.fmt.parseInt(usize, input_txt[0..], 10);
