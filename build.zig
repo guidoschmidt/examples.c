@@ -47,7 +47,7 @@ pub fn build(b: *std.Build) !void {
     var input = try r.readUntilDelimiterOrEof(&msg_buf, '\n');
 
     if (input) |input_txt| {
-        const parsed_num = try std.fmt.parseInt(usize, input_txt[0..1], 10);
+        const parsed_num = try std.fmt.parseInt(usize, input_txt[0..], 10);
 
         it.reset();
         var j: u32 = 0;

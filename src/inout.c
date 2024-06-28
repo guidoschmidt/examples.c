@@ -1,8 +1,13 @@
 #include <stdio.h>
 int main(int argc, char *argv[])
 {
+  char c = getchar();
+  printf("\nFirst char was %c", c);
+  putchar('\n');
+  putchar(c);
+
   int input;
-  printf("Please enter a number... ");
+  printf("\nPlease enter a number... ");
   scanf("%d", &input);
   printf("Nice choice %d!", input);
 
@@ -10,7 +15,7 @@ int main(int argc, char *argv[])
   float b;
   printf("\nNow please give two floats... ");
   scanf("%f%f", &a, &b);
-  printf("Adding these gives %f", a + b);
+  printf("Adding %f and %f we get %f", a, b, a + b);
   
   return 0;
 }

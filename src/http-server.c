@@ -81,12 +81,17 @@ static void handleConnection(const int sk, const int public_dir) {
   memcpy(path_buf, recv_buf + 4, 20);
   removeSubstring(path_buf, "HTTP/1.1");
 
+  printf(">>> [PATH] %s", path_buf);
+ 
   if (strcmp("/", path_buf) < 0) {
     strcpy(path_buf, "index.html");
     file_path = path_buf;
   }
-
   printf(">>> [?] Requested file %s", file_path);
+
+
+  printf(">>> Route match %i", strcmp("/api", file_path));
+
 
   body_fd = openat(public_dir, file_path, O_RDONLY);
 
