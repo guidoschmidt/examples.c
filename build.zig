@@ -7,12 +7,8 @@ const io = std.io;
 fn createExecutable(b: *std.Build, source: []u8, name: []const u8) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
-    const exe = b.addExecutable(.{
-        .name = name,
-        .root_source_file = .{.path = source },
-        .optimize = optimize,
-        .target = target
-    });
+    const exe = b.addExecutable(.{ .name = name, .optimize = optimize, .target = target, .link_libc = true });
+    exe.addCSourceFile(.{ .file = b.path(source) });
     exe.linkLibC();
 
     b.installArtifact(exe);
@@ -24,10 +20,7 @@ fn createExecutable(b: *std.Build, source: []u8, name: []const u8) !void {
 }
 
 pub fn build(b: *std.Build) !void {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const allocator = gpa.allocator();
-
-    const src_dir = try fs.cwd().openIterableDir("./src", .{});
+    const src_dir = try fs.cwd().openDir("./src", .{});
     var it = src_dir.iterate();
     var i: u32 = 0;
     while (try it.next()) |path| : (i += 1) {
@@ -55,14 +48,14 @@ pub fn build(b: *std.Build) !void {
             _ = try it.next();
         }
         const selected_example = try it.next();
-        debug.print("\nSelected {s}\n", .{ selected_example.?.name });
+        debug.print("\nSelected {s}\n", .{selected_example.?.name});
 
         const source = selected_example.?.name;
         var split_it = std.mem.splitSequence(u8, source, ".");
         const source_name = split_it.next() orelse "none";
-        const source_file = try std.fmt.allocPrint(allocator, "./src/{s}", .{ source });
-        defer allocator.free(source_file);
-        
+        const source_file = try std.fmt.allocPrint(b.allocator, "./src/{s}", .{source});
+        defer b.allocator.free(source_file);
+
         try createExecutable(b, source_file, source_name);
     }
 }
